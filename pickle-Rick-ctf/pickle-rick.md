@@ -21,7 +21,8 @@ nmap <MACHINE_IP>
 The scan revealed two accessible ports: 22/tcp running SSH and 80/tcp serving HTTP. Since the challenge is centered around a web application, I concentrated on the HTTP service first.
 
 ![Initial Nmap scan displaying ports 22 and 80.]
-https://github.com/Aman-Sharma97/TRYHACKME-LAB-SOLVE-WRITEUP/blob/main/pickle-Rick-ctf/01-nmap-scan.png?raw=true
+<img width="1016" height="298" alt="01-nmap-scan" src="https://github.com/user-attachments/assets/be5bbf9c-be73-43c8-bb8c-313f0f70ba3d" />
+
 *Evidence - Initial Nmap scan displaying ports 22 and 80.*
 
 
