@@ -34,7 +34,9 @@ I visited the web application and reviewed its HTML source. A developer comment 
 
 **Username:** `R1ckRul3s`
 
-![Username found inside an HTML comment.]c:\tryhackme-pickle-rick-writeup\images\02-html-source-username.png
+![Username found inside an HTML comment.]
+<img width="1384" height="646" alt="02-html-source-username" src="https://github.com/user-attachments/assets/224e9618-4426-4737-8680-80ef3e020374" />
+
 *Evidence - Username found inside an HTML comment.*
 
 
@@ -49,7 +51,8 @@ gobuster dir -u http://<MACHINE_IP> -w /usr/share/wordlists/dirb/common.txt -x p
 The enumeration returned `login.php`, `robots.txt`, and `portal.php` among other resources. The 302 redirect from `portal.php` to `login.php` suggested that the command interface was protected by authentication.
 
 ![Results returned by the Gobuster enumeration.]
-c:\tryhackme-pickle-rick-writeup\images\03-gobuster-results.png
+<img width="1168" height="712" alt="03-gobuster-results" src="https://github.com/user-attachments/assets/6a01fc5b-c07e-4ec0-8753-8650eec7e5f9" />
+
 *Evidence - Results returned by the Gobuster enumeration.*
 
 
@@ -60,7 +63,8 @@ Before trying the login form, I checked `robots.txt`. Rather than containing onl
 **Password candidate:** `Wubbalubbadubdub`
 
 ![Password candidate exposed through robots.txt.]
-c:\tryhackme-pickle-rick-writeup\images\04-robots-txt.png
+<img width="1147" height="455" alt="04-robots-txt" src="https://github.com/user-attachments/assets/9d9471d6-f0b7-4ed0-9c9f-d2ff5b44d479" />
+
 *Evidence - Password candidate exposed through robots.txt.*
 
 
@@ -70,7 +74,9 @@ I entered the discovered username and password into `login.php`. The credentials
 
 **Credentials:** `R1ckRul3s` / `Wubbalubbadubdub`
 
-![Discovered credentials submitted through the portal login page.]c:\tryhackme-pickle-rick-writeup\images\05-login-page.png
+![Discovered credentials submitted through the portal login page.]
+<img width="1386" height="657" alt="05-login-page" src="https://github.com/user-attachments/assets/1dc7500b-3b02-421e-b14a-8be2ef23a970" />
+
 *Evidence - Discovered credentials submitted through the portal login page.*
 
 
@@ -82,7 +88,9 @@ Once authenticated, the portal allowed operating-system commands to be executed.
 ls
 ```
 
-![Files displayed from the current web directory.]c:\tryhackme-pickle-rick-writeup\images\06-web-directory-listing.png
+![Files displayed from the current web directory.]
+<img width="1384" height="600" alt="06-web-directory-listing" src="https://github.com/user-attachments/assets/3d1d2c50-489e-43ca-9f65-5f0ed6b7f950" />
+
 *Evidence - Files displayed from the current web directory.*
 
 
@@ -94,7 +102,8 @@ less Sup3rS3cretPickl3Ingred.txt
 
 ![Contents returned from Sup3rS3cretPickl3Ingred.txt.]
 
-c:\tryhackme-pickle-rick-writeup\images\07-first-ingredient.png
+<img width="2173" height="696" alt="07-first-ingredient" src="https://github.com/user-attachments/assets/82733fd1-7636-4956-b5da-d3df3340e3a8" />
+
 *Evidence - Contents returned from Sup3rS3cretPickl3Ingred.txt.*
 
 
@@ -110,13 +119,17 @@ ls /home
 ls /home/rick
 ```
 
-![Listing of the root filesystem.]c:\tryhackme-pickle-rick-writeup\images\08-root-filesystem.png
+![Listing of the root filesystem.]
+<img width="1388" height="660" alt="08-root-filesystem" src="https://github.com/user-attachments/assets/7df8e010-dbe6-4fa0-aa47-017d1f0c8b12" />
+
 *Evidence - Listing of the root filesystem.*
 
-![User directories discovered under /home.]c:\tryhackme-pickle-rick-writeup\images\09-home-directory.png
+![User directories discovered under /home.]
+<img width="1388" height="367" alt="09-home-directory" src="https://github.com/user-attachments/assets/e6da6ba5-c7b2-445b-9035-49484114b28b" />
 *Evidence - User directories discovered under /home.*
 
-![The file containing the second ingredient under /home/rick.]c:\tryhackme-pickle-rick-writeup\images\10-rick-home.png
+![The file containing the second ingredient under /home/rick.]
+<img width="1381" height="424" alt="10-rick-home" src="https://github.com/user-attachments/assets/0370d2db-e1af-4284-bb53-89a54403eb44" />
 *Evidence - The file containing the second ingredient under /home/rick.*
 
 
@@ -126,7 +139,8 @@ Because the filename includes a space, I placed the complete filename inside dou
 less /home/rick/"second ingredients"
 ```
 
-![Contents retrieved from the second ingredients file.]c:\tryhackme-pickle-rick-writeup\images\11-second-ingredient.png
+![Contents retrieved from the second ingredients file.]
+<img width="2139" height="511" alt="11-second-ingredient" src="https://github.com/user-attachments/assets/d612d9b9-b2fe-427c-b0b4-e43c766c1fa1" />
 *Evidence - Contents retrieved from the second ingredients file.*
 
 
@@ -142,7 +156,8 @@ whoami
 
 The result was `www-data`, confirming that the command panel was operating under the web-service account rather than a normal user account.
 
-![whoami output showing that portal commands execute as www-data.]c:\tryhackme-pickle-rick-writeup\images\12-whoami.png
+![whoami output showing that portal commands execute as www-data.]
+<img width="1614" height="511" alt="12-whoami" src="https://github.com/user-attachments/assets/debee0e3-b88b-4e7d-ad3a-75474ec9e9bd" />
 *Evidence - whoami output showing that portal commands execute as www-data.*
 
 
@@ -152,7 +167,8 @@ I then checked whether this web-service account had permission to access privile
 sudo ls /root
 ```
 
-![/root successfully listed with elevated privileges.]c:\tryhackme-pickle-rick-writeup\images\13-root-directory.png
+![/root successfully listed with elevated privileges.]
+<img width="1381" height="398" alt="13-root-directory" src="https://github.com/user-attachments/assets/42acf440-2c4e-4f00-b216-8a7620bb0cdb" />
 *Evidence - /root successfully listed with elevated privileges.*
 
 
@@ -162,7 +178,8 @@ The privileged directory listing showed `3rd.txt`. I used the available sudo acc
 sudo less /root/3rd.txt
 ```
 
-![Contents of /root/3rd.txt.]c:\tryhackme-pickle-rick-writeup\images\14-third-ingredient.png
+![Contents of /root/3rd.txt.]
+<img width="2185" height="529" alt="14-third-ingredient" src="https://github.com/user-attachments/assets/0d6d6795-fd9f-4853-aa3b-35a48877ddbd" />
 *Evidence - Contents of /root/3rd.txt.*
 
 
