@@ -4,7 +4,7 @@ Mr Robot | TryHackMe Lab Report
 
 Difficulty: Medium
 
-# 2. Assessment Scope and Goals
+# 1. Assessment Scope and Goals
 
 The goal of this exercise was to obtain at least three flags in the assigned CTF environment and record the approach, evidence, and results in line with the Bincom 6th Contact Session assignment.
 
@@ -17,7 +17,7 @@ The goal of this exercise was to obtain at least three flags in the assigned CTF
 | Engagement type | Authorized lab CTF — credited to Leon Johnson, used with creator's permission |
 | Flags required | 3 minimum (3 captured) |
 
-# 3. Tools and Their Roles
+# 2. Tools and Their Roles
 
 Nmap — port/service enumeration
 
@@ -33,9 +33,9 @@ Hashcat — MD5 hash cracking (rockyou.txt wordlist)
 
 SSH — remote shell access
 
-# 4. Assessment Workflow
+# 3. Assessment Workflow
 
-## 4.1 Initial Service Discovery
+## 3.1 Initial Service Discovery
 
 The first step was a full TCP port scan with Nmap, including default scripts and service-version detection, to map the target's externally reachable services:
 
@@ -51,7 +51,7 @@ The scan returned three accessible services:
 
 The HTTP service presented a Mr Robot-themed WordPress website. Its reported version, WordPress 4.3.1, is obsolete and therefore became the main area for further investigation.
 
-## 4.2 Flag One — Information Exposed by robots.txt
+## 3.2 Flag One — Information Exposed by robots.txt
 
 As part of routine web enumeration, the site's robots.txt file was inspected for paths and files that might reveal useful information:
 
@@ -64,7 +64,7 @@ curl http://10.129.138.192/key-1-of-3.txt
 | Key 1 Captured: 073403c8a58a1f80d943455fb30724b9 |
 | --- |
 
-## 4.3 Identifying a Valid Username
+## 3.3 Identifying a Valid Username
 
 Credential testing required a confirmed account name first. Three automated enumeration approaches were tried, but none identified a user:
 
@@ -86,7 +86,7 @@ curl -s -X POST http://10.130.138.103/wp-login.php \
 
 The differing error messages indicated that elliot was a valid username on this installation.
 
-## 4.4 Password Recovery Through Wordlist Testing
+## 3.4 Password Recovery Through Wordlist Testing
 
 The fsocity.dic file contained 858,160 lines. A test against the unprocessed list was estimated to take more than nine hours, so duplicate entries were removed first. This reduced the working list to 11,451 distinct candidates:
 
@@ -101,11 +101,11 @@ The reduced list produced working WordPress credentials in about five minutes:
 | WordPress Credentials: elliot : ER28-0652 |
 | --- |
 
-## 4.5 Verifying Administrative Access
+## 3.5 Verifying Administrative Access
 
 The recovered login details opened the WordPress administration area. The dashboard greeting, “Howdy, Elliot Alderson,” confirmed the authenticated account.
 
-## 4.6 Reverse-Shell Attempt Through the Theme Editor
+## 3.6 Reverse-Shell Attempt Through the Theme Editor
 
 Because the account had administrator privileges, the theme editor was available under Appearance → Editor. The Twenty Fifteen theme's 404.php template was changed to test PHP command execution when a missing page was requested.
 
@@ -113,7 +113,7 @@ Several reverse-shell variants were attempted, including PHP socket/exec, Bash /
 
 A standalone fsockopen() connectivity check, without launching a shell, returned “FAILED: 110 Connection timed out.” This supported the conclusion that outbound TCP traffic from the target to the VPN address was filtered by the lab network, rather than the failure being caused solely by payload syntax.
 
-## 4.7 Alternative Approach — Reading Local Files
+## 3.7 Alternative Approach — Reading Local Files
 
 With the reverse-shell route unavailable, the same PHP execution point was used for local file inspection. PHP file functions could read accessible paths without needing a new outbound connection.
 
@@ -130,7 +130,7 @@ The web-server account could not read key-2-of-3.txt because the file belonged t
 file_get_contents('/home/robot/password.raw-md5');
 // → robot:c3fcd3d76192e4007dfb496cca67e13b
 
-## 4.8 Recovering the Password from Its Hash
+## 3.8 Recovering the Password from Its Hash
 
 Hashcat was used to compare the recovered MD5 value against entries in the rockyou.txt password list:
 
@@ -141,7 +141,7 @@ hashcat -m 0 -a 0 robot_hash.txt /usr/share/wordlists/rockyou.txt
 | robot User Credentials: robot : abcdefghijklmnopqrstuvwxyz |
 | --- |
 
-## 4.9 Flag Two — Logging in Through SSH
+## 3.9 Flag Two — Logging in Through SSH
 
 Since SSH had been identified as open during reconnaissance, it provided a direct alternative to the blocked reverse-shell connection. The recovered robot credentials were used to log in:
 
@@ -152,7 +152,7 @@ cat /home/robot/key-2-of-3.txt
 | Key 2 Captured: 822c73956184f694993bede3eb39f959 |
 | --- |
 
-## 4.10 Escalating from robot to Root
+## 3.10 Escalating from robot to Root
 
 After obtaining a shell as robot, the available sudo permissions were checked. The account was not permitted to run sudo commands:
 
@@ -173,7 +173,7 @@ cat /root/key-3-of-3.txt
 | Key 3 Captured (Root): 04787ddef27c3dee1ee161b21670b4e4 |
 | --- |
 
-# 5. Key Findings and Lessons
+# 4. Key Findings and Lessons
 
 Username discovery may require more than automated enumeration. The REST API, author-ID checks, and WPScan did not identify the account in this case, while comparing login error messages did. Keep a manual verification method available.
 
@@ -185,7 +185,7 @@ Checking SUID files is a quick way to find privilege-escalation opportunities. H
 
 Moving from the time-limited AttackBox to a Kali VM over OpenVPN affected the workflow. Recording that environment change makes the methodology reproducible and transparent.
 
-# 7. Conclusion
+# 5. Conclusion
 
 All three flags were recovered, completing the Mr Robot CTF room. The exercise covered a chain of techniques beginning with unauthenticated service discovery and ending with root access: web reconnaissance, credential testing, authenticated PHP execution, hash recovery, SSH access, and SUID-based privilege escalation.
 
